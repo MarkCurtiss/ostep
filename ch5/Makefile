@@ -1,6 +1,10 @@
-all: 01
+all: 01 02
 
-clean: -f 01
+clean:
+	rm -f 01 02
 
 01: 01.c
-	gcc -o 01 01.c -Wall
+	gcc -o 01 01.c -Wall -Wextra -Werror -O2 -std=c99 -pedantic
+
+02: 02.c
+	gcc -o 02 02.c -Wall -Wextra -Werror -O2 -std=c99 -pedantic

@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 int
-main(int argc, char *argv[])
+main()
 {
     printf("hello world (pid:%d)\n", (int) getpid());
 
