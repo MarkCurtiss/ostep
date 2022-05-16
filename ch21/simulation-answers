@@ -1,0 +1,156 @@
+1. When I run `mem 1` it immediately jumps to the top of the cpu usage chart in top, at 99% usage. If I run a second instance,
+they both jump to the top of the usage chart.
+
+2. I notice the 'Resient' memory value decrease when I kill the program, though not exactly by 1024. I also notice the PysMem 'unused' column increase when I kill the programme.
+
+Before:
+Processes: 363 total, 2 running, 361 sleeping, 1215 threads                                                     10:36:44
+Load Avg: 1.69, 1.72, 2.65  CPU usage: 5.50% user, 5.2% sys, 89.47% idle
+SharedLibs: 238M resident, 81M data, 29M linkedit. MemRegions: 46442 total, 2368M resident, 182M private, 841M shared.
+PhysMem: 7119M used (1409M wired), 1072M unused.
+VM: 2202G vsize, 1990M framework vsize, 768(0) swapins, 1024(0) swapouts.
+Networks: packets: 781176/923M in, 316776/101M out. Disks: 2208326/18G read, 673852/8320M written.
+
+PID   COMMAND      %CPU TIME     #TH   #WQ  #PORT MEM    PURG   CMPRS  PGRP PPID STATE    BOOSTS        %CPU_ME
+241   WindowServer 11.0 10:45.26 11    5    990+  262M+  6720K- 0B     241  1    sleeping *0[1]         2.23914
+
+
+During:
+
+Processes: 364 total, 3 running, 361 sleeping, 1200 threads                                                     10:36:58
+Load Avg: 1.65, 1.71, 2.64  CPU usage: 51.20% user, 5.79% sys, 42.99% idle
+SharedLibs: 238M resident, 81M data, 29M linkedit. MemRegions: 46477 total, 3392M resident, 182M private, 841M shared.
+PhysMem: 8160M used (1425M wired), 31M unused. VM: 2208G vsize, 1990M framework vsize, 768(0) swapins, 1024(0) swapouts.
+Networks: packets: 781226/923M in, 316808/101M out. Disks: 2208333/18G read, 673859/8321M written.
+
+PID   COMMAND      %CPU TIME     #TH   #WQ  #PORT MEM    PURG   CMPRS  PGRP PPID STATE    BOOSTS          %CPU_ME
+4585  mem          92.2 00:05.27 1/1   0    10    1024M  0B     0B     4585 2924 running  *0[1]           0.0000
+
+After:
+
+Processes: 362 total, 3 running, 1 stuck, 358 sleeping, 1192 threads                                            10:37:07
+Load Avg: 1.85, 1.75, 2.64  CPU usage: 25.73% user, 11.59% sys, 62.67% idle
+SharedLibs: 238M resident, 81M data, 29M linkedit. MemRegions: 46399 total, 2367M resident, 182M private, 841M shared.
+PhysMem: 7133M used (1442M wired), 1058M unused.
+VM: 2198G vsize, 1990M framework vsize, 768(0) swapins, 1024(0) swapouts.
+Networks: packets: 781237/923M in, 316817/101M out. Disks: 2208335/18G read, 673864/8322M written.
+
+PID   COMMAND      %CPU TIME     #TH   #WQ  #PORT MEM    PURG   CMPRS  PGRP PPID STATE    BOOSTS          %CPU_ME
+241   WindowServer 27.9 10:48.33 11/1  5    1001  272M+  4736K- 0B     241  1    running  *0[1]           2.4
+
+
+3. vm_stat output before starting ./mem 4096
+
+Mach Virtual Memory Statistics: (page size of 4096 bytes)
+    free   active   specul inactive throttle    wired  prgable   faults     copy    0fill reactive   purged file-backed anonymous cmprssed cmprssor  dcomprs   comprs  pageins  pageout  swapins swapouts
+  526244   523755      805   524131        0   365190     3687 82106706  1345844 21794201   229735   319360      443429    605262   360215   156743  1765919  2716807  2303508    26186      768     1024
+  525774   524070      667   524212        0   365465     2920     6851        0     4297        0        0      443428    605521   360164   156695       51        0        0        0        0        0
+  525849   525124      724   524221        0   364427     4101     2195        0     1173        0        0      443511    606558   359721   156599      439        0        0        0        0        0
+  525773   525743      735   524873        0   363194     4994      473        0      450        0        0      443522    607829   359705   156599       16        0        0        0        0        0
+  525684   525827      746   524871        0   363180     5076      498        0      427        0        0      443533    607911   359663   156583       42        0        0        0        0        0
+  525733   525840      747   524865        0   363176     5065      433        0      423        0        0      443534    607918   359661   156583        2        0        0        0        0        0
+
+THen. . .
+  742133      399   747351        0   362794     6429   292747        1     2407       10       32      440974   1048909   961390   239355   146983   142406       42        0        0        0
+      3365   744936      399   744943        0   362740     5892   349112        0      478    42564       80      440930   1049348   960198   239719   174330   173138        0        0        0        0
+          3429   744722      398   745142        0   362623     5809   347928        0      495     2954      905      440929   1049333   959094   240455   173717   172613        0        1        0        0
+	      3769   745195      540   744295        0   362504     4343   299263        0      643     9746      667      440935   1049095   956759   240055   149366   147664        1        0        0        0
+	          4175   743192      349   746635        0   362374      832   334594        0      494    27017     3604      440744   1049432   952125   240039   167046   163186        0       36        0        0
+		      3558   745352      142   745129        0   362232     1307   358521        0     1719     6466        0      440540   1050083   951323   239911   178216   177504        0       19        0        0
+		          4140   744532      142   744675        0   362145     1307   369273        0      378     1238        0      440540   1048809   951244   241267   184447   184375        0        0        0        0
+			  ~
+
+Then it finally swaps:
+  733152      430   732950        0   365622     3086   307011        0      559      683      147      439315   1027217   956569   260390   153518   163632        0        0      575        0
+      3289   730280      463   729469        0   365852     3654   302807      193     3506     2696        4      439495   1020717   964132   266830   149948   157537      168        0        0        0
+          3511   724682      463   724082        0   365816     3582   307809        1     1047      998        1      439507   1009720   974983   277726   153812   164903        8        0       64        0
+	      3600   719390      484   718637        0   365346     2739   252912        0      504     2012        1      439528    998983   986336   288754   126478   137831        1        1      320        0
+	          3580   714187      499   713467        0   362008     3614   304051        0      877      980       48      438846    989307   998781   302410   152162   164700        0        0        0        0
+		  Mach Virtual Memory Statistics: (page size of 4096 bytes)
+		      free   active   specul inactive throttle    wired  prgable   faults     copy    0fill reactive   purged file-backed anonymous cmprssed cmprssor  dcomprs   comprs  pageins  pageout  swapins swapouts
+		          3490   709851      751   708809        0   360111     2846 94328739  1346793 22944353   380068   330403      438842    980569  1008577   313217  7307525  8913982  2305548    26251     2111    41438
+			  ~
+
+If I run `./mem 6000` then I see more consistent swapping:
+
+    3956   764671      400   764105        0   356688     3879   351570        0      135        8        0      438476   1090700  1384506   206530   175730   175407        0        0       63        0
+    3959   764545      400   763814        0   356631     3851   347427        0      392    74346      723      438476   1090283  1384198   207078   173099   172792        0        0      128        0
+    3375   764866      354   765235        0   355919     3422   348891        0      565        0       20      438430   1092025  1383091   207078   174150   173055        0        0        0        0
+    3518   764950      358   764530        0   355815     2648   346226        0      520        2       25      438436   1091402  1382603   206902   173074   172592        1        0      128        0
+    3472   764092      358   763500        0   357875     3398   176636        0     1591      494      466      438436   1089514  1382428   206738    88427    88920        0        0       64        0
+    3421   763563      459   762576        0   360226     1980   300196      195     1816     3736        4      438546   1088052  1382993   205956   150428   150994      100        0       64        0
+    3494   764157      459   763545        0   358614     3909   358981        0      459     5077        2      438546   1089615  1383017   205964   179266   179291        0        0        0        0
+    3908   763995      459   763119        0   358504     3460   352293        0      480      321      449      438546   1089027  1383104   206348   175682   175788        0        0      381        0
+    3589   764048      459   763937        0   358380     2704   338868        0      492        0        0      438546   1089898  1382784   206396   169207   168890        0        0       64        0
+
+
+The swap values seem to update right as another loop starts, which makes sense.
+
+4. When I run ./mem 6000, cpu% goes up to 100% again for that process. The 'faults' value for that process goes way up, which makes sense:
+
+Processes: 364 total, 3 running, 1 stuck, 360 sleeping, 1202 threads                                                                                                                                                         10:49:47
+Load Avg: 2.62, 2.05, 2.17  CPU usage: 16.19% user, 32.61% sys, 51.19% idle  SharedLibs: 238M resident, 81M data, 29M linkedit. MemRegions: 45616 total, 2695M resident, 182M private, 843M shared.
+PhysMem: 8175M used (1323M wired), 17M unused. VM: 2131G vsize, 1990M framework vsize, 285684(64) swapins, 497254(0) swapouts. Networks: packets: 787304/927M in, 320787/102M out. Disks: 2218816/19G read, 692536/10G written.
+
+PID   COMMAND      %CPU  TIME     #TH   #WQ  #PORT MEM    PURG   CMPRS  PGRP PPID STATE    BOOSTS          %CPU_ME %CPU_OTHRS UID  FAULTS    COW    MSGSENT   MSGRECV   SYSBSD   SYSMACH   CSW       PAGEIN IDLEW    POWER INSTRS
+4624  mem          96.3  01:36.07 1/1   0    10    6000M  0B     1699M+ 4624 4501 running  *0[1]           0.00000 0.00000    501  30561444+ 89     28        13        123      100       224363+   0      3        96.3  2766331236
+0     kernel_task  71.8  13:22.77 173/4 0    0     85M+   0B     0B     0    0    running   0[0]           0.00000 0.00000    0    18973     0      17898880+ 15387962+ 0        0         38142701+ 0      1573408  0.0   4060016075
+2
+
+
+
+5.
+
+markcurtiss@Marks-MacBook-Air [11]>./mem 1024
+allocating 1073741824 bytes (1024.00 MB)
+  number of integers in array: 268435456
+loop 0 in 790.11 ms (bandwidth: 1296.02 MB/s)
+loop 1 in 237.32 ms (bandwidth: 4314.92 MB/s)
+loop 2 in 224.09 ms (bandwidth: 4569.63 MB/s)
+loop 3 in 219.86 ms (bandwidth: 4657.59 MB/s)
+loop 4 in 224.56 ms (bandwidth: 4559.97 MB/s)
+loop 5 in 226.55 ms (bandwidth: 4520.07 MB/s)
+
+vs
+
+markcurtiss@Marks-MacBook-Air [12]>./mem 4096
+allocating 4294967296 bytes (4096.00 MB)
+  number of integers in array: 1073741824
+loop 0 in 3483.86 ms (bandwidth: 1175.71 MB/s)
+loop 1 in 3475.80 ms (bandwidth: 1178.43 MB/s)
+loop 2 in 3194.23 ms (bandwidth: 1282.31 MB/s)
+loop 3 in 3393.99 ms (bandwidth: 1206.84 MB/s)
+loop 4 in 3428.33 ms (bandwidth: 1194.75 MB/s)
+loop 5 in 3043.18 ms (bandwidth: 1345.96 MB/s)
+
+vs
+
+markcurtiss@Marks-MacBook-Air [13]>./mem 12000
+allocating 12582912000 bytes (12000.00 MB)
+  number of integers in array: 3145728000
+loop 0 in 12778.80 ms (bandwidth: 939.06 MB/s)
+loop 1 in 19525.92 ms (bandwidth: 614.57 MB/s)
+loop 2 in 15410.78 ms (bandwidth: 778.68 MB/s)
+loop 3 in 14797.73 ms (bandwidth: 810.94 MB/s)
+loop 4 in 15398.63 ms (bandwidth: 779.29 MB/s)
+loop 5 in 14284.60 ms (bandwidth: 840.07 MB/s)
+
+
+The bandwidth numbers are much lower in the larger allocation cases.
+The first loop is significantly slower when everything fits comfortable in memory (1024), but on larger invocations
+it doesn't matter much.
+
+6. For this I guess I'll have to use htop's 'swp' value? 'cuz there is no swapon for MacOS.
+If I run:
+markcurtiss@Marks-MacBook-Air [17]>./mem 16000
+
+I see swap usage slowly creep up to 1.24G/2G, from a starting value of 473M/2G.
+
+Trying with 32000, swap only creeps up to 1.29G.
+ ./mem 64000 finally gets killed by the OS:
+ markcurtiss@Marks-MacBook-Air [19]>./mem 64000
+allocating 67108864000 bytes (64000.00 MB)
+  number of integers in array: 16777216000
+Killed: 9
+
+7. That's not something I can do on MacOS!
