@@ -1,0 +1,79 @@
+1.
+
+./paging-policy.py -s 0 -n 10 -p FIFO
+| access | result | memory |
+|      8 | miss   | 8      |
+|      7 | miss   | 8 7    |
+|      4 | miss   | 8 7 4  |
+|      2 | miss   | 7 4 2  |
+|      5 | miss   | 4 2 5  |
+|      4 | hit    | 4 2 5  |
+|      7 | miss   | 2 5 7  |
+|      3 | miss   | 5 7 3  |
+|      4 | miss   | 7 3 4  |
+|      5 | miss   | 3 4 5  |
+
+./paging-policy.py -s 0 -n 10 -p LRU
+| access | result | memory |
+|      8 | miss   | 8      |
+|      7 | miss   | 8 7    |
+|      4 | miss   | 8 7 4  |
+|      2 | miss   | 7 4 2  |
+|      5 | miss   | 4 2 5  |
+|      4 | hit    | 2 5 4  |
+|      7 | miss   | 5 4 7  |
+|      3 | miss   | 4 7 3  |
+|      4 | hit    | 7 3 4  |
+|      5 | miss   | 3 4 5  |
+
+./paging-policy.py -s 0 -n 10 -p OPT
+| access | result | memory |
+|      8 | miss   | 8      |
+|      7 | miss   | 8 7    |
+|      4 | miss   | 8 7 4  |
+|      2 | miss   | 7 4 2  |
+|      5 | miss   | 7 4 5  |
+|      4 | hit    | 7 4 5  |
+|      7 | hit    | 7 4 5  |
+|      3 | miss   | 4 5 3  |
+|      4 | hit    | 4 5 3  |
+|      5 | hit    | 4 5 3  |
+
+./paging-policy.py -s 1 -n 10 -p FIFO
+| access | result | memory |
+|      1 | miss   | 1      |
+|      8 | miss   | 1 8    |
+|      7 | miss   | 1 8 7  |
+|      2 | miss   | 8 7 2  |
+|      4 | miss   | 7 2 4  |
+|      4 | hit    | 7 2 4  |
+|      6 | miss   | 2 4 6  |
+|      7 | miss   | 4 6 7  |
+|      0 | miss   | 6 7 0  |
+|      0 | hit    | 6 7 0  |
+
+./paging-policy.py -s 1 -n 10 -p LRU
+| access | result | memory |
+|      1 | miss   | 1      |
+|      8 | miss   | 8 1    |
+|      7 | miss   | 7 8 1  |
+|      2 | miss   | 2 7 8  |
+|      4 | miss   | 4 2 7  |
+|      4 | hit    | 4 2 7  |
+|      6 | miss   | 6 4 2  |
+|      7 | miss   | 7 6 4  |
+|      0 | miss   | 0 7 6  |
+|      0 | hit    | 0 7 6  |
+
+./paging-policy.py -s 1 -n 10 -p OPT
+| access | result | memory |
+|      1 | miss   | 1      |
+|      8 | miss   | 1 8    |
+|      7 | miss   | 1 8 7  |
+|      2 | miss   | 1 7 2  |
+|      4 | miss   | 1 7 4  |
+|      4 | hit    | 1 7 4  |
+|      6 | miss   | 1 7 6  |
+|      7 | hit    | 1 7 6  |
+|      0 | miss   | 1 7 0  |
+|      0 | hit    | 1 7 0  |
